@@ -1,0 +1,102 @@
+/* LIBRARIES */
+@import 'normalize.css';
+/* FONTS */
+@import '../fonts/CabinetGrotesk_Complete/css/cabinet-grotesk.css';
+@import '../fonts/ClashDisplay/css/clash-display.css';
+@import '../fonts/ClashGrotesk_Complete/css/clash-grotesk.css';
+
+
+* {
+  --colorDark: rgb(31, 31, 31);
+  --colorLight: #d3d3d3;
+  --colorTextBlue: #0F56F4;
+  --colorTextDark: #F5F5F5;
+  --colorTextPrimary: rgb(73, 73, 73);
+  --colorTextSecondary: rgb(104, 104, 104);
+  --colorThresholdLine: rgb(154, 154, 154);
+  --colorGridBorder: #F5F5F5;
+  --colorProjectImgBorder: #0f57f479;
+  --colorIntersecting: #0f57f4;
+
+  --colorTransparent: rgba(0, 0, 0, 0);
+
+  --gridCellSize: 40px;
+  --navbarHeight: calc(var(--gridCellSize) * 2);
+  --cellFontSize: calc(var(--gridCellSize) * .6);
+  --navbarFontSize: calc(var(--gridCellSize) * .5);
+  --projTitleFontSize: calc(var(--gridCellSize) * .7);
+  --projTypeFontSize: 1.2rem;
+  --projectInfoGap: calc(var(--gridCellSize) * 4);
+
+  --gridBorder: 1px solid var(--colorGridBorder);
+  --projectImgBorder: 2px solid var(--colorProjectImgBorder);
+
+  text-decoration: none;
+}
+
+a, a:link, a:visited, a:focus, a:hover, a:active {
+  color: var(--colorDark);
+  text-decoration: none;
+}
+
+html, body {
+  width: 100vw;
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+  
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+#root, #main {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  display: none;
+}
+
+#loader {
+  display: flex;
+  position: fixed;
+  
+  width: 100vw;
+  height: 100vh;
+
+  left: 0;
+  top: 0;
+  padding: 0;
+  margin: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  background: var(--colorLight);
+  backdrop-filter: blur(2px);
+  
+  font-family: ClashGrotesk-Light;
+  font-size: 10em;
+  color: var(--colorTextBlue);
+  user-select: none;
+
+  z-index: 10;
+}
+
+@media only screen and (max-width: 850px) {
+  * {
+    --gridCellSize: 40px;
+  }
+}
