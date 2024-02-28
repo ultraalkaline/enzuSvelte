@@ -186,7 +186,6 @@
     // Only handle project name cell clicks
     if (cellClass.includes("project")) {
       let projectName = cellClass.replace(" project cell", "");
-      console.debug("Clicked project ", projectName);
       emitter.emit('toggle-grid');
       removeClass("#" + projectName + "-container", "hidden");
       // Reset navigation buttons when a project is opened
@@ -296,7 +295,6 @@
             // Check if grid columns (incl. colBuffer) can contain the entire project name
             if (grid.cols >= grid.cols - (grid.cols - colBuffer) + (projectName[0].length + projectName[1].length + 1))
             {
-              console.debug("columns can contain project name, inserting...");
               insertProjectName(project.id, projectName, row, colBuffer);
             }
             // If not, split project name into two parts at whitespace
@@ -327,7 +325,6 @@
         if (projectChars.length > 0) {
           let projChar = projectChars.shift();
           row.cells[C].char = projChar;
-          console.debug(projectId + " ", projChar);
           //shuffleCellAnim(row.cells[C], projChar);
           row.cells[C].class = projectId + ' project cell';
           row.cells[C].row = row.row;
@@ -370,8 +367,6 @@
       row.hasContactInfo = false;
       grid.grid[row.row] = row;
     });
-
-    console.debug("Grid cleared");
   };
 
   const displayContactInfo = () => {
@@ -495,7 +490,6 @@
         // TODO: Insert contact information into grid.
         break;
     }
-    console.debug("<<GRID>> state: ", $state);
   };
 
   initializeGrid();
@@ -531,12 +525,6 @@
   });
 
 </script>
-
-<style scoped>
-
-@import '../css/Grid.css';
-
-</style>
 
 <div id="work-content" class="nav-content">
   <div id="grid" on:mouseleave={onGridUnHover} on:toggle-grid={toggleGrid} role="grid" tabindex="0">
@@ -596,3 +584,129 @@
     </video>
   </div>
 </div>
+
+
+<style scoped>
+
+  * {
+    --projThumbPreviewWidth: calc(var(--gridCellSize) * 15);
+    --projThumbPreviewHeight: unset;
+  }
+  
+  #grid {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    margin-top: var(--navbarHeight);
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    background: none;
+  
+    z-index: 1 !important;
+  }
+  
+  #grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  #grid .row:first-of-type {
+    border-top: var(--gridBorder);
+  }
+  
+  #grid .row {
+    display: inline-flex;
+    flex-direction: row;
+    max-width: 100%;
+  
+    border-left: var(--gridBorder);
+    border-bottom: var(--gridBorder);
+  }
+  
+  #grid .cell {
+    font-family: ClashGrotesk-Light;
+    font-size: var(--cellFontSize);
+    color: var(--colorTextDark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: var(--gridCellSize) !important;
+    height: var(--gridCellSize) !important;
+    
+    border-right: var(--gridBorder);
+    
+    padding: 0;
+    
+    transition: background-color .2s ease-in-out, color .2s ease-in-out;
+    z-index: inherit;
+  }
+  
+  #grid .cell.project, #grid .cell.contact {
+    font-family: ClashGrotesk-Light;
+    font-weight: 600;
+    color: var(--colorTextBlue);
+  
+    mix-blend-mode: difference;
+    cursor: pointer;
+  }
+  
+  #grid .cell.project.hidden {
+    color: var(--colorTransparent);
+    mix-blend-mode: normal;
+    text-shadow: none;
+  }
+  
+  #grid .cell.hidden {
+    color: var(--colorTransparent);
+  }
+  
+  #grid .floating {
+    position: absolute;
+    display: inline-block;
+    
+    font-family: ClashGrotesk-Regular;
+    font-size: var(--projTypeFontSize);
+    color: var(--colorTextSecondary);
+  
+    mix-blend-mode: difference;
+  
+    transform: translate(
+      calc(var(--gridCellSize) / 2 - var(--projTypeFontSize) / 4 - 1px),
+      calc(var(--gridCellSize) / 2 - var(--projTypeFontSize) / 2));
+  
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #grid #project-thumb_preview {
+    position: fixed !important;
+    display: inline-flex;
+  
+    width: calc(var(--projThumbPreviewWidth));
+    max-height: 100vh;
+  
+    object-fit: contain;
+    visibility: visible;
+  
+    margin: 0 !important;
+    padding: 0 !important;
+  
+    left: 50%;
+    top: 50%;
+  
+    border: 1px solid var(--colorTextBlue);
+  
+    z-index: 0;
+  
+    pointer-events: none;
+  }
+  
+  #grid .floating.hidden, #grid #project-thumb_preview.hidden {
+    visibility: hidden;
+  }
+  
+  </style>

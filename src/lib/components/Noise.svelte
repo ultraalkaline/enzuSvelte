@@ -70,10 +70,39 @@
 
 <svelte:window on:resize={handleResize}></svelte:window>
 
-<style>
-  @import '../css/Noise.css';
-</style>
-
 <div bind:this={container} class="noise-container" placement={placement}>
   <canvas bind:this={canvas}></canvas>
 </div>
+
+<style scoped>
+  .noise-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    z-index: -1;
+    opacity: .2;
+  }
+
+  .noise-container[placement="header"] {
+    background-color: #d8d8d8;
+    opacity: 1;
+  }
+
+  .noise-container[placement="header"] canvas {
+    opacity: .1;
+  }
+
+  .noise-container[placement="background"] {
+    top: var(--navbarHeight);
+  }
+
+  .noise-container[placement="background"] canvas {
+    opacity: .6;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>

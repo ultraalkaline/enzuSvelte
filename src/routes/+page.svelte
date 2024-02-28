@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { Projects } from '$lib/Projects.js';
   import NoiseComponent from '$lib/components/Noise.svelte';
   import GridComponent from '$lib/components/Grid.svelte';
@@ -44,17 +44,31 @@
     shuffleCharacters(btn, btn.textContent);
   }
 
-  onMount(() => {
-    $state = STATE.Projects;
-  });
-
+  // TODO: Fix this; page does not seem to respond to 'load' changes when deployed with `npm run build && npm run preview` 
   const loaded = () => {
+    console.log("Should be loaded by now");
     setTimeout(() => {
       jQ("#loader").fadeOut(200, () => {
         jQ("#app").fadeIn(200);
       });
     }, 1500);
   }
+
+  onMount(() => {
+    
+    $state = STATE.Projects;
+    if (!import.meta.env.SSR) {
+      // Only run on the client side
+      window.addEventListener('load', loaded);
+    }
+  });
+
+  onDestroy(() => {
+    if (!import.meta.env.SSR) {
+      // Only run on the client side
+      window.removeEventListener('load', loaded);
+    }
+  });
 
   // Similar to Vue `watch`
   state.subscribe((value) => {
@@ -83,7 +97,7 @@
   export { STATE };
 </script>
 
-<svelte:window on:load={loaded} bind:innerWidth={headerNoiseWidth}></svelte:window>
+<svelte:window bind:innerWidth={headerNoiseWidth}></svelte:window>
 
 <style>
   @import '../lib/css/App.css';
@@ -125,7 +139,6 @@
 
     {#each Projects as project (project.id)}
       <ProjectContent 
-        key={project.id}
         project={project} />
     {/each}
 
