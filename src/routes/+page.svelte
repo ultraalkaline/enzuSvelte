@@ -68,17 +68,17 @@
   onMount(() => {
     
     $state = STATE.Projects;
-    if (!import.meta.env.SSR) {
+    //if (!import.meta.env.SSR) {
       // Only run on the client side
       window.addEventListener('load', loaded);
-    }
+    //}
   });
 
   onDestroy(() => {
-    if (!import.meta.env.SSR) {
+    //if (!import.meta.env.SSR) {
       // Only run on the client side
       window.removeEventListener('load', loaded);
-    }
+    //}
   });
 
   // Similar to Vue `watch`
