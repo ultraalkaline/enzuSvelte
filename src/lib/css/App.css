@@ -86,21 +86,15 @@ body::-webkit-scrollbar {
 
   background: var(--colorLight);
   backdrop-filter: blur(2px);
-  
-  font-family: ClashGrotesk-Light;
-  font-size: 10em;
-  color: var(--colorTextBlue);
-  user-select: none;
-
   z-index: 10;
 }
 
 #loader-text {
-  display: inline-block;
-}
-
-#loader-text.hidden {
   display: none;
+  font-family: ClashGrotesk-Light;
+  font-size: 10em;
+  color: var(--colorTextBlue);
+  user-select: none;
 }
 
 @media only screen and (max-width: 850px) {

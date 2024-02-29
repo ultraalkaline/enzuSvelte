@@ -19,7 +19,7 @@
   let mobileMenuRef;
 
   document.fonts.ready.then(() => {
-    jQ("#loader-text").toggleClass('hidden');
+    jQ("#loader-text").fadeIn(500);
     shuffleLoaderChars("enzu", true).then(() => {
       setTimeout(() => {
         jQ("#loader").fadeOut(200, () => {
@@ -27,8 +27,6 @@
         });
       }, 1500);
     });
-    
-    
   });
 
   const SetPageState = (newState) => {
