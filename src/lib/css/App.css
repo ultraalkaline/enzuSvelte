@@ -95,6 +95,14 @@ body::-webkit-scrollbar {
   z-index: 10;
 }
 
+#loader-text {
+  display: inline-block;
+}
+
+#loader-text.hidden {
+  display: none;
+}
+
 @media only screen and (max-width: 850px) {
   * {
     --gridCellSize: 40px;

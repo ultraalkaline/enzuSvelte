@@ -146,38 +146,75 @@ export function shuffleCharacters(el, text) {
   }, delay);
 }
 
-export function shuffleRandomChars(el, text, lowerCase) {
+export function shuffleRandomChars(el, text, lowerCase, numIterations = 25) {
+  return new Promise((resolve) => {
 
-  const duration = 25; // Duration of each iteration in milliseconds
-  const delay = 12; // Delay between iterations in milliseconds
+    const duration = 100; // Duration of each iteration in milliseconds
+    const delay = 24; // Delay between iterations in milliseconds
 
-  const chars = text.split('');
-  const originalText = [...chars]; // Make a copy of the original text
+    const chars = text.split('');
+    const originalText = [...chars]; // Make a copy of the original text
 
-  const shuffleIntervals = [];
+    const shuffleIntervals = [];
 
-  el.textContent = getRandomString();
+    el.textContent = getRandomString();
 
-  for (let i = 0; i < chars.length; i++) {
-    let numIterations = 2; // Number of iterations to alter between random letters
+    for (let i = 0; i < chars.length; i++) {
+      shuffleIntervals.push(
+        setInterval(() => {
+          if (numIterations > 0) {
+            if (lowerCase)
+              chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
+            else
+              chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
+            el.textContent = chars.join(''); // Update the element's content with the new character
+            numIterations--;
+          } else {
+            chars[i] = originalText[i]; // Restore the original character
+            el.textContent = chars.join(''); // Update the element's content with the original character
+            clearInterval(shuffleIntervals[i]); // Clear the interval for this character
+            resolve();
+          }
+        }, duration + i * delay) // Add a delay between intervals for different characters
+      );
+    }
+  });
 
-    shuffleIntervals.push(
-      setInterval(() => {
-        if (numIterations > 0) {
-          if (lowerCase)
-            chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
-          else
-            chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
-          el.textContent = chars.join(''); // Update the element's content with the new character
-          numIterations--;
-        } else {
-          chars[i] = originalText[i]; // Restore the original character
-          el.textContent = chars.join(''); // Update the element's content with the original character
-          clearInterval(shuffleIntervals[i]); // Clear the interval for this character
-        }
-      }, duration + i * delay) // Add a delay between intervals for different characters
-    );
-  }
+}
+
+export function shuffleLoaderChars(text, lowerCase) {
+  return new Promise((resolve) => {
+    const loader = document.getElementById('loader-text');
+    const duration = 100; // Duration of each iteration in milliseconds
+    const delay = 24; // Delay between iterations in milliseconds
+
+    const chars = text.split('');
+    const originalText = [...chars]; // Make a copy of the original text
+
+    const shuffleIntervals = [];
+
+    loader.textContent = getRandomString();
+
+    for (let i = 0; i < chars.length; i++) {
+      shuffleIntervals.push(
+        setInterval(() => {
+          if (document.readyState != 'complete') {
+            if (lowerCase)
+              chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
+            else
+              chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
+              loader.textContent = chars.join(''); // Update the element's content with the new character
+          } else {
+            // TODO: Change this part to finally shuffle to the final character in a sequence until displaying the target text. 
+            chars[i] = originalText[i]; // Restore the original character
+            loader.textContent = chars.join(''); // Update the element's content with the original character
+            clearInterval(shuffleIntervals[i]); // Clear the interval for this character
+            resolve();
+          }
+        }, duration + i * delay) // Add a delay between intervals for different characters
+      );
+    }
+  });
 }
 
 export function shuffleCell(cell, newChar) {

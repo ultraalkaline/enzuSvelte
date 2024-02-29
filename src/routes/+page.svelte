@@ -7,7 +7,7 @@
   import ENZULogo from '$lib/img/icons/Enzu_logo.svg';
 
   import { state, STATE } from '$lib/stores';
-  import { shuffleRandomChars, shuffleCharacters, addClass } from '$lib/HelperFunctions';
+  import { shuffleRandomChars, shuffleLoaderChars, shuffleCharacters, addClass } from '$lib/HelperFunctions';
 
   import jQ from 'jquery';
 
@@ -18,7 +18,18 @@
   let hamburgerRef;
   let mobileMenuRef;
 
-  shuffleRandomChars(document.getElementById("loader"), "enzu", true);
+  document.fonts.ready.then(() => {
+    jQ("#loader-text").toggleClass('hidden');
+    shuffleLoaderChars("enzu", true).then(() => {
+      setTimeout(() => {
+        jQ("#loader").fadeOut(200, () => {
+          jQ("#app").fadeIn(200);
+        });
+      }, 1500);
+    });
+    
+    
+  });
 
   const SetPageState = (newState) => {
     if (newState !== STATE.None)
@@ -46,12 +57,12 @@
 
   // TODO: Fix this; page does not seem to respond to 'load' changes when deployed with `npm run build && npm run preview` 
   const loaded = () => {
-    console.log("Should be loaded by now");
-    setTimeout(() => {
-      jQ("#loader").fadeOut(200, () => {
-        jQ("#app").fadeIn(200);
-      });
-    }, 1500);
+    // console.log("Should be loaded by now");
+    // setTimeout(() => {
+    //   jQ("#loader").fadeOut(200, () => {
+    //     jQ("#app").fadeIn(200);
+    //   });
+    // }, 1500);
   }
 
   onMount(() => {

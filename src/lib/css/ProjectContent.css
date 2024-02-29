@@ -8,7 +8,7 @@
   --thresholdIndicatorBorderWidth: 2px;
 
   --thresholdLineRight: calc(var(--gridCellSize) * 2.5 - var(--thresholdLineWidth) / 2);
-  --threhsoldIndicatorRight: calc(var(--gridCellSize) * 2.5 - var(--thresholdIndicatorSize) / 2 - var(--thresholdIndicatorBorderWidth) / 2);
+  --thresholdIndicatorRight: calc(var(--gridCellSize) * 2.5 - var(--thresholdIndicatorSize) / 2 - var(--thresholdIndicatorBorderWidth) / 2);
   --thresholdLineTop: calc(var(--navbarHeight) + var(--gridCellSize) * 3);
   --thresholdIndicatorTop: calc(50% - (var(--navbarHeight) - var(--gridCellSize) * 3));
 }
@@ -23,7 +23,7 @@
 
   width: var(--thresholdIndicatorSize);
   height: var(--thresholdIndicatorSize);
-  right: calc(var(--threhsoldIndicatorRight) - var(--thresholdIndicatorBorderWidth) / 2);
+  right: calc(var(--thresholdIndicatorRight) - var(--thresholdIndicatorBorderWidth) / 2);
   top: var(--thresholdIndicatorTop);
 
   border: var(--thresholdIndicatorBorderWidth) solid var(--colorIntersecting);
@@ -55,7 +55,7 @@
 
   width: 18px;
   height: 18px;
-  right: var(--threhsoldIndicatorRight);
+  right: var(--thresholdIndicatorRight);
 
   border: 2px solid var(--colorThresholdLine);
   border-radius: 100%;
@@ -294,7 +294,7 @@
     --thresholdIndicatorSize: 18px;
 
     --thresholdLineRight: calc(var(--gridCellSize) * 1.5 - var(--thresholdLineWidth) / 2);
-    --threhsoldIndicatorRight: calc(var(--gridCellSize) * 1.5 - var(--thresholdIndicatorSize) / 2);
+    --thresholdIndicatorRight: calc(var(--gridCellSize) * 1.5 - var(--thresholdIndicatorSize) / 2);
     --thresholdLineTop: calc(var(--navbarHeight) + var(--gridCellSize) * 3);
     --thresholdIndicatorTop: calc(var(--navbarHeight) + var(--gridCellSize) * 8);
   }
