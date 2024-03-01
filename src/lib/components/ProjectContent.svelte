@@ -33,51 +33,7 @@
   };
 
   onMount(() => {
-    videos = Array.from(projectContainerRef.querySelectorAll('video'));
-
-    // Create an Intersection Observer to track the video visibility
-    observer = new IntersectionObserver((entries, o) => {
-      const thresholdLineRefTop = parseFloat(
-        getComputedStyle(document.getElementById(project.id + '-threshold-line'))
-          .getPropertyValue('top')
-          .replace('px', '')
-          .replace(' ', '')
-      );
-
-      const navbarHeight = cellSize * 2;
-
-      document.getElementById(project.id + '-threshold-line').style.height = projectContainerRef.clientHeight - thresholdLineRefTop + navbarHeight + cellSize + "px";
-      entries.forEach((entry) => {
-        // TODO: Position `.threshold-play` element for each video here?
-        if (entry.isIntersecting) {
-          entry.target.play();
-          document.getElementById(project.id + '-threshold-line').classList.add('intersecting');
-          document.getElementById(project.id + '-threshold-indicator').classList.add('intersecting');
-        } else {
-          entry.target.pause();
-          document.getElementById(project.id + '-threshold-line').classList.remove('intersecting');
-          document.getElementById(project.id + '-threshold-indicator').classList.remove('intersecting');
-        }
-      });
-    }, { threshold: 0.6 });
-
-    // Observe each video element
-    videos.forEach((videoRef, num) => {
-      observer.observe(videoRef);
-
-      if (!videoRef.classList.contains('project-anim')) {
-        let videoName;
-        // Only extract the filename from the src URL.
-        videoName = videoRef.src.match(/[^/]*$/);
-
-        var bodyRect = document.body.getBoundingClientRect(),
-            videoRect = videoRef.getBoundingClientRect(),
-            offset = videoRect.top - bodyRect.top;
-        // TODO: Fix the line below, the regex doesn't work for production.
-        let thresholdPlayEl = document.querySelector('#threshold-play_' + project.id + '_' + videoRef.getAttribute('key'));
-        thresholdPlayEl.style.top = offset + "px";
-      }
-    });
+    
   });
 
   onDestroy(() => {
@@ -88,8 +44,6 @@
 </script>
 
 <div bind:this={projectContainerRef} id="{`${project.id}-container`}" class="project-content hidden" transition:fade={{ duration: 200 }}>
-  <span bind:this={thresholdLineRef} id='{project.id}-threshold-line' class="threshold threshold-line"></span>
-  <span bind:this={thresholdIndicatorRef} id='{project.id}-threshold-indicator' class="threshold threshold-indicator"></span>
 
   <div key="{`project-title_${project.id}`}" class="project-header-container">
     <div class="project-title-container">
@@ -143,16 +97,19 @@
 
   <div class="project-media-container spotlight-group" id="{`project-media-container_${project.id}`}">
     {#each projectMedia as filePath, num (filePath)}
-      
       {#if filePath.default.includes('.jpg') || filePath.default.includes('.jpeg') || filePath.default.includes('.png')}
         <a class="spotlight" href="{filePath.default}">
           <img key={num} src="{filePath.default}" alt="{filePath.default}" />
         </a>
       {/if}
-      {#if filePath.default.includes('.webm') || filePath.default.includes('.mp4')}
-        <video key={num} muted="muted" loop="loop" src={filePath.default}></video>
-        <!-- We need to place each .threshold-play element to the right of its video, centered vertically. -->
-        <span class="threshold-play" key={num} id="threshold-play_{project.id}_{num}"></span>
+      {#if filePath.default.includes('.webm')}
+        <a class="spotlight" href={filePath.default} data-src-webm={filePath.default} data-media="video" data-muted="true">
+          <video key={num} muted="muted" loop="loop" src={filePath.default}></video>
+        </a>
+      {:else if filePath.default.includes('.mp4')}
+        <a class="spotlight" href={filePath.default} data-src-mp4={filePath.default} data-media="video" data-muted="true">
+          <video key={num} muted="muted" loop="loop" src={filePath.default}></video>
+        </a>
       {/if}
     {/each}
   </div>

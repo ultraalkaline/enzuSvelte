@@ -259,6 +259,7 @@
   width: 100%;
   height: fit-content;
   object-fit: contain;
+  margin-bottom: -5px;
 }
 
 @media only screen and (max-width: 1600px) {
@@ -409,5 +410,20 @@
 
   .project-media-container {
     width: calc(100% - (var(--gridCellSize) * 2));
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .project-info-container .row {
+    font-size: calc(var(--gridCellSize) * .3);
+    line-height: calc(var(--gridCellSize) * .6);
+  }
+
+  .project-overview {
+    line-height: calc(var(--gridCellSize) * .7);
+  }
+
+  .project-info-container > .column > .row:nth-child(2), .project-overview:not(.column) {
+    margin-top: calc(var(--gridCellSize) * .3);
   }
 }
