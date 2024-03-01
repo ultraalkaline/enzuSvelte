@@ -252,7 +252,6 @@
 
 .project-media-container img, .project-media-container video {
   width: 100%;
-  height: fit-content;
   object-fit: contain;
 }
 
