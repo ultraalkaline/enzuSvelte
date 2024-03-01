@@ -1,11 +1,15 @@
+
+
 <script>
   import { state } from '$lib/stores';
   import { onMount, onDestroy } from 'svelte';
-  import { getRandomInt, getRandomChar, shuffleRandomChars, addClass, removeClass, hasClass, elHasClass } from '$lib/HelperFunctions';
+  import { fly, fade, slide, crossfade, blur } from 'svelte/transition';
+  import jQ from 'jquery';
+  import { getRandomInt, getRandomChar, addClass, removeClass, hasClass, elHasClass, shuffleRandomChars } from '$lib/HelperFunctions';
   import { Projects } from '$lib/Projects';
   import emitter from '$lib/eventBus';
-  import anime from 'animejs/lib/anime.es';
-  import jQ from 'jquery';
+  import anime from 'animejs';
+	import { flip } from 'svelte/animate';
 
   // Constants
   const cellSize = parseFloat(
@@ -16,53 +20,83 @@
   );
   const navbarHeight = cellSize * 2;
 
+  // Vars
   let grid;
   let projectType;
   let contactEmail = "BARSIN.NISSAN@GMAIL.COM";
   let contactInsta = "ENZU.DESIGN";
-
-  // References
-  let projectTypePreviewRef, contactEmailRef, contactInstaRef;
-
   let activeCellHoverTimelines = [];
 
-  const generateGrid = () => {
+  // Refs
+  let projectTypePreviewRef, contactEmailRef, contactInstaRef;
+
+  function generateGrid() {
     // Get the dimensions of the grid based on window width and height
     let numRows = Math.floor((window.innerHeight - navbarHeight) / cellSize);
-    let numCols = Math.floor(window.innerWidth / cellSize);
+        let numCols = Math.floor(window.innerWidth / cellSize);
+        
+        // Always make sure that the number of rows is at least as many as the number of projects, with a gap in-between each project
+        if (numRows < Projects.length + (Projects.length * 2))
+          numRows = Projects.length + (Projects.length * 2);
 
-    // Always make sure that the number of rows is at least as many as the number of projects, with a gap in-between each project
-    if (numRows < Projects.length + (Projects.length * 2))
-      numRows = Projects.length + (Projects.length * 2);
+        // Create an empty grid array
+        let grid = [];
 
-    // Create an empty grid array
-    let grid = [];
+        // Populate the grid with characters
+        for (let R = 0; R < numRows; R++) {
+          let row = { row: R, shownProject: "", cells: [] };
 
-    // Populate the grid with characters
-    for (let R = 0; R < numRows; R++) {
-      let row = { row: R, shownProject: "", cells: [] };
+          for (let C = 0; C < numCols; C++) {
+            let char = getRandomChar(false);
+            row.cells.push({char: char, class: 'cell', row: R, col: C});
+          }
+          grid.push(row);
+        }
+      
+        return {grid: grid, rows: numRows, cols: numCols};
+  }
 
-      for (let C = 0; C < numCols; C++) {
-        let char = getRandomChar(false);
-        row.cells.push({ char: char, class: 'cell', row: R, col: C });
-      }
-      grid.push(row);
+  const onStateUpdated = () => {
+    switch ($state)
+    {
+      case "projects":
+        if (!jQ("#mobile-menu").is(":visible"))
+          jQ("#work-content").show(200);
+        else
+          jQ("#work-content").hide(200);
+        clearGrid();
+        populateGridWithProjects();
+        break;
+      case "about":
+        jQ("#work-content").hide(200);
+        break;
+      case "contact":
+        if (!jQ("#mobile-menu").is(":visible"))
+          jQ("#work-content").show(200);
+        else
+          jQ("#work-content").hide(200);
+        clearGrid();
+        displayContactInfo();
+        break;
+      case "project":
+        jQ("#hamburger").hide(200);
+        break;
     }
+  }
 
-    return { grid: grid, rows: numRows, cols: numCols };
-  };
-
-  const initializeGrid = () => {
+  function initializeGrid() {
     grid = generateGrid();
     onStateUpdated();
-  };
+  }
 
-  const updateCellValue = (cell, value) => {
+  initializeGrid();
+
+  function updateCellValue(cell, value) {
     if (grid.grid[cell.row].cells[cell.col])
       grid.grid[cell.row].cells[cell.col].char = value;
-  };
+  }
 
-  const onCellHover = (cell) => {
+  function onCellHover(cell) {
     const cellClass = cell.class;
 
     // Handle random character cell hover
@@ -178,18 +212,17 @@
         }
       }
     }
-  };
+  }
 
-  const onCellClick = (cell) => {
+  function onCellClick(cell) {
     const cellClass = cell.class;
     
     // Only handle project name cell clicks
     if (cellClass.includes("project")) {
       let projectName = cellClass.replace(" project cell", "");
-      emitter.emit('toggle-grid');
       removeClass("#" + projectName + "-container", "hidden");
       // Reset navigation buttons when a project is opened
-      $state = "none";
+      $state = "project";
       window.scrollTo(0, 0);
     } else if (cellClass.includes("contact")) {
       if (cellClass.includes("email")) {
@@ -198,7 +231,7 @@
         window.open('https://www.instagram.com/' + contactInsta.toLowerCase(), '_blank');
       }
     }
-  };
+  }
 
   const onGridUnHover = () => {
     addClass("#project-type_preview", "hidden");
@@ -209,9 +242,9 @@
     removeClass(".cell.hidden", "hidden");
 
     projectType = null;
-  };
+  }
 
-  const shuffleCellAnim = (originalCell, newChar, projectId) => {
+  function shuffleCellAnim(originalCell, newChar, projectId) {
     const disappearDelay = 200; // Delay for the letters to disappear in milliseconds
     const numIterations = 5; // Number of iterations to alter between random letters
     const duration = 100; // Duration of each iteration in milliseconds
@@ -221,13 +254,13 @@
 
     if (cellEl)
     {
-      cellEl.textContent = "";
+      grid.grid[originalCell.row].cells[originalCell.col].char = "";
       // Create the anime.js timeline for the animation
       const timeline = anime.timeline({
         autoplay: false, // Set to true if you want the animation to start immediately
         complete: () => {
           // Set the grid value for the cell at the end of all animations
-          updateCellValue(originalCell, newChar);
+          grid.grid[originalCell.row].cells[originalCell.col].char = newChar;
         },
       });
 
@@ -239,7 +272,8 @@
           easing: "linear",
           complete: () => {
             // Set the text content to a random character during the animation
-            cellEl.textContent = getRandomChar();
+            const randomChar = getRandomChar();
+            grid.grid[originalCell.row].cells[originalCell.col].char = randomChar;
           },
         });
       }
@@ -252,7 +286,7 @@
         easing: "linear",
         update: () => {
           // Set the text content to the final letter during the animation
-          cellEl.textContent = newChar;
+          grid.grid[originalCell.row].cells[originalCell.col].char = newChar;
         },
       });
 
@@ -262,9 +296,9 @@
         timeline.play();
       }, disappearDelay);
     }
-  };
+  }
 
-  const populateGridWithProjects = () => {
+  function populateGridWithProjects() {
     // Copy of projects array to keep track of shown projects in the grid
     let availableProjects = [...Projects];
     grid.grid.filter(row => row.shownProject === "").forEach(row => {
@@ -309,9 +343,9 @@
         }          
       }
     });
-  };
+  }
 
-  const insertProjectName = (projectId, projectName, row, colBuffer) => {
+  function insertProjectName(projectId, projectName, row, colBuffer) {
     if (projectId !== undefined)
     {
       let projectChars = projectName.join(" ").split("");
@@ -324,6 +358,7 @@
       for (let C = colBuffer; C < grid.cols; C++) {
         if (projectChars.length > 0) {
           let projChar = projectChars.shift();
+          const newCell = {char: projChar, class: projectId + ' project cell', row: row.row, col: C};
           row.cells[C].char = projChar;
           //shuffleCellAnim(row.cells[C], projChar);
           row.cells[C].class = projectId + ' project cell';
@@ -336,9 +371,9 @@
       // Update the row in the grid
       grid.grid[row.row] = row;
     }
-  };
+  }
 
-  const clearGrid = () => {
+  function clearGrid() {
     // Stop all anime.js cell hover animations
     for (let i = 0; i < activeCellHoverTimelines.length; i++) {
       activeCellHoverTimelines[i].pause();
@@ -349,6 +384,7 @@
       row.cells.forEach(cell => {
         if (cell.class.includes("project")) {
           cell.char = getRandomChar();
+          //shuffleCellAnim(cell, getRandomChar());
           cell.class = 'cell';
         }
       });
@@ -367,9 +403,9 @@
       row.hasContactInfo = false;
       grid.grid[row.row] = row;
     });
-  };
+  }
 
-  const displayContactInfo = () => {
+  function displayContactInfo() {
     let colBuffer = 0;
     let rowBuffer = 1;
 
@@ -382,7 +418,7 @@
     if (contactEmail && contactInsta) {
       const emptyRow = grid.grid.find(row => row.shownProject === "" && !row.hasContactInfo && row.row == rowBuffer);
       const nextEmptyRow = grid.grid[emptyRow.row + 2];
-
+      
       if (emptyRow) {
         // Insert the title first (after the buffer)
         let stringChars = "EMAIL".split("");
@@ -415,27 +451,19 @@
         grid.grid[nextEmptyRow.row] = nextEmptyRow;
       }
     }
-  };
+  }
 
-  const toggleGrid = (forceHide) => {
-    if (forceHide) {
-      jQ('#work-content').hide(200);
-      return;
-    }
-    jQ('#work-content').toggle(200);
-  };
-
-  const updateThumbPreviewPos = (event) => {
+  function updateThumbPreviewPos(event) {
+    // TODO: Transform this function to return `top` and `left` for `projThumbEl` and use it in the style directly.
+    // See https://svelte.dev/docs/element-directives#style-property for reference
     let projThumbEl = document.getElementById("project-thumb_preview");
-    if (projThumbEl && !projThumbEl.classList.contains('hidden')) {
+    if (projThumbEl && !elHasClass(projThumbEl, 'hidden')) 
+    {
       const cursorX = event.clientX;
       const cursorY = event.clientY;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
       const previewWidth = projThumbEl.offsetWidth;
       const previewHeight = projThumbEl.offsetHeight;
       const buffer = 20;
-
       const availableRightSpace = viewportWidth - cursorX - buffer;
       const availableLeftSpace = cursorX - buffer;
       const availableTopSpace = cursorY - buffer;
@@ -446,16 +474,22 @@
       // If right space can contain the preview
       if (availableRightSpace >= previewWidth) {
         left = cursorX + buffer;
-      } else if (availableLeftSpace >= previewWidth) {
+      } 
+      // otherwise, if left space can contain the preview
+      else if (availableLeftSpace >= previewWidth) {
         left = cursorX - previewWidth - buffer;
-      } else {
+      } 
+      // if all else fails, place to the right of cursor
+      else {
         left = cursorX + buffer; // Fallback to right if no horizontal space
       }
 
       // If bottom space can contain the preview
       if (availableBottomSpace >= previewHeight) {
         top = cursorY + buffer;
-      } else if (availableTopSpace >= previewHeight) {
+      } 
+      // otherwise, if top space can contain the preview
+      else if (availableTopSpace >= previewHeight) {
         top = cursorY - previewHeight - buffer;
       } else {
         top = cursorY + buffer; // Fallback to bottom if no vertical space
@@ -466,52 +500,28 @@
     }
   };
 
-  const onStateUpdated = () => {
-    switch ($state)
-    {
-      case "projects":
-        if (!jQ("#mobile-menu").is(":visible"))
-          jQ("#work-content").show(200);
-        else
-          jQ("#work-content").hide(200);
-        clearGrid();
-        populateGridWithProjects();
-        break;
-      case "about":
-        jQ("#work-content").hide(200);
-        break;
-      case "contact":
-        if (!jQ("#mobile-menu").is(":visible"))
-          jQ("#work-content").show(200);
-        else
-          jQ("#work-content").hide(200);
-        clearGrid();
-        displayContactInfo();
-        // TODO: Insert contact information into grid.
-        break;
-    }
-  };
-
-  initializeGrid();
-
-  // Executes whenever the value of `state` changes
-  state.subscribe((value) => {
-    onStateUpdated();
-  });
+  
 
   onMount(() => {
-    emitter.on("toggle-grid", toggleGrid);
-    // Only re-init the grid on width changes
-    let prevWidth = window.innerWidth;
-    window.addEventListener('resize', function () {
-      if (window.innerWidth !== prevWidth) {
-        initializeGrid();
+    initializeGrid();
 
+    // Only re-init the grid on width changes.
+    let prevWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth !== prevWidth) {
+        clearGrid();
+        initializeGrid();
+        switch ($state) {
+          case "projects":
+            populateGridWithProjects();
+            break;
+          case "contact":
+            displayContactInfo();
+            break;
+        }
         prevWidth = window.innerWidth;
       }
     });
-
-    document.getElementById('grid').addEventListener('mousemove', updateThumbPreviewPos);
   });
 
   onDestroy(() => {
@@ -519,194 +529,80 @@
     removeClass('.cell.hovered', 'hovered');
 
     window.removeEventListener('resize', initializeGrid);
-
-    document.getElementById('grid').removeEventListener('mousemove', updateThumbPreviewPos);
-    emitter.off("toggle-grid");
   });
 
+  // Executes whenever the value of `state` changes
+  state.subscribe((value) => {
+    onStateUpdated();
+  });
+
+  $: grid = generateGrid();
+  $: viewportWidth = 0;
+  $: viewportHeight = 0;
 </script>
 
-<div id="work-content" class="nav-content">
-  <div id="grid" on:mouseleave={onGridUnHover} on:toggle-grid={toggleGrid} role="grid" tabindex="0">
-    {#each grid.grid as row, R} 
-      <div class="row" key={R} role="row">
-        {#each row.cells as cell, col}
+{#if $state === "projects" || $state === "contact"}
+<div id="work-content" class="nav-content" transition:slide={{ duration: 200 }}>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div id="grid" on:mouseleave={onGridUnHover} on:mousemove={updateThumbPreviewPos}>
+    {#each grid.grid as row, R}
+      <div class="row" role="row">
+        {#each row.cells as cell, col (cell)}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <div 
             class={cell.class}
             row={R}
             col={col}
-            key={`${cell.row}-${cell.col}`}
             on:mouseenter={onCellHover(cell)}
-            on:click={onCellClick(cell)}
-            role="gridcell"
-            tabindex="0"
-            >
+            on:click={onCellClick(cell)}>
             { cell.char }
           </div>
         {/each}
-      </div>
+      </div>        
     {/each}
+    
 
-    <div id="project-type_preview" 
-      class="hidden floating" 
-      hidden={!projectType}
-      bind:this={projectTypePreviewRef}>
-      { projectType }
-    </div>
+  <div id="project-type_preview"
+    class="hidden floating" 
+    hidden={!projectType}
+    bind:this={projectTypePreviewRef}>
+    { projectType }
+  </div>
 
-    <a id="contact-email" class="hidden floating contact-tooltip"
-      href={`mailto:${contactEmail}`}
-      hidden={!contactEmail}
-      bind:this={contactEmailRef}>
-      { contactEmail }
-    </a>
+  <a id="contact-email" class="hidden floating contact-tooltip"
+    href={`mailto:${contactEmail}`}
+    hidden={!contactEmail}
+    bind:this={contactEmailRef}>
+    { contactEmail }
+  </a>
 
-    <a id="contact-instagram" class="hidden floating contact-tooltip"
-      href={`https://www.instagram.com/@${contactInsta}`}
-      v-show="contactInsta"
-      bind:this={contactInstaRef}>
-      { contactInsta }
-    </a>
+  <a id="contact-instagram" class="hidden floating contact-tooltip"
+    href={`https://www.instagram.com/@${contactInsta}`}
+    v-show="contactInsta"
+    bind:this={contactInstaRef}>
+    { contactInsta }
+  </a>
 
-    <video
-      id="project-thumb_preview"
-      alt="project preview"
-      class="hidden"
-      autoplay
-      playsinline
-      loop
-      muted>
-      <source
-        type='video/mp4; codecs=hvc1'/>
-      <source
-        type='video/webm'/>
-    </video>
+  <video
+    id="project-thumb_preview"
+    alt="project preview"
+    class="hidden"
+    autoplay
+    playsinline
+    loop
+    muted>
+    <source
+      type='video/mp4; codecs=hvc1'/>
+    <source
+      type='video/webm'/>
+  </video>
   </div>
 </div>
+{/if}
 
+<svelte:window bind:innerWidth={viewportWidth} bind:innerHeight={viewportHeight}></svelte:window>
 
-<style scoped>
-
-  * {
-    --projThumbPreviewWidth: calc(var(--gridCellSize) * 15);
-    --projThumbPreviewHeight: unset;
-  }
-  
-  #grid {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    position: relative;
-    margin-top: var(--navbarHeight);
-    width: 100%;
-    height: 100%;
-    user-select: none;
-    background: none;
-  
-    z-index: 1 !important;
-  }
-  
-  #grid::-webkit-scrollbar {
-    display: none !important;
-  }
-  
-  #grid .row:first-of-type {
-    border-top: var(--gridBorder);
-  }
-  
-  #grid .row {
-    display: inline-flex;
-    flex-direction: row;
-    max-width: 100%;
-  
-    border-left: var(--gridBorder);
-    border-bottom: var(--gridBorder);
-  }
-  
-  #grid .cell {
-    font-family: ClashGrotesk-Light;
-    font-size: var(--cellFontSize);
-    color: var(--colorTextDark);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  
-    width: var(--gridCellSize) !important;
-    height: var(--gridCellSize) !important;
-    
-    border-right: var(--gridBorder);
-    
-    padding: 0;
-    
-    transition: background-color .2s ease-in-out, color .2s ease-in-out;
-    z-index: inherit;
-  }
-  
-  #grid .cell.project, #grid .cell.contact {
-    font-family: ClashGrotesk-Light;
-    font-weight: 600;
-    color: var(--colorTextBlue);
-  
-    mix-blend-mode: difference;
-    cursor: pointer;
-  }
-  
-  #grid .cell.project.hidden {
-    color: var(--colorTransparent);
-    mix-blend-mode: normal;
-    text-shadow: none;
-  }
-  
-  #grid .cell.hidden {
-    color: var(--colorTransparent);
-  }
-  
-  #grid .floating {
-    position: absolute;
-    display: inline-block;
-    
-    font-family: ClashGrotesk-Regular;
-    font-size: var(--projTypeFontSize);
-    color: var(--colorTextSecondary);
-  
-    mix-blend-mode: difference;
-  
-    transform: translate(
-      calc(var(--gridCellSize) / 2 - var(--projTypeFontSize) / 4 - 1px),
-      calc(var(--gridCellSize) / 2 - var(--projTypeFontSize) / 2));
-  
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  #grid #project-thumb_preview {
-    position: fixed !important;
-    display: inline-flex;
-  
-    width: calc(var(--projThumbPreviewWidth));
-    max-height: 100vh;
-  
-    object-fit: contain;
-    visibility: visible;
-  
-    margin: 0 !important;
-    padding: 0 !important;
-  
-    left: 50%;
-    top: 50%;
-  
-    border: 1px solid var(--colorTextBlue);
-  
-    z-index: 0;
-  
-    pointer-events: none;
-  }
-  
-  #grid .floating.hidden, #grid #project-thumb_preview.hidden {
-    visibility: hidden;
-  }
-  
-  </style>
+<style>
+  @import '../css/Grid.css';
+</style>

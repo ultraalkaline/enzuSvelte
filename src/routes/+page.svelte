@@ -7,7 +7,7 @@
   import ENZULogo from '$lib/img/icons/Enzu_logo.svg';
 
   import { state, STATE } from '$lib/stores';
-  import { shuffleRandomChars, shuffleLoaderChars, shuffleCharacters, addClass } from '$lib/HelperFunctions';
+  import { shuffleLoaderChars, shuffleCharacters, addClass } from '$lib/HelperFunctions';
 
   import jQ from 'jquery';
 
@@ -30,7 +30,7 @@
   });
 
   const SetPageState = (newState) => {
-    if (newState !== STATE.None)
+    if (newState !== STATE.Project)
       addClass('.project-content', 'hidden');
     $state = newState;
   }
@@ -144,12 +144,11 @@
       </div>
     </div>
 
-    <GridComponent bind:this={gridComponentRef}/>
+    <GridComponent bind:this={gridComponentRef} />
 
     {#each Projects as project (project.id)}
       <ProjectContent 
         project={project} />
     {/each}
-
   </div>
 </section>
