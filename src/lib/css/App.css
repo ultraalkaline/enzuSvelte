@@ -1,10 +1,9 @@
 /* LIBRARIES */
 @import 'normalize.css';
 /* FONTS */
-@import '../fonts/CabinetGrotesk_Complete/css/cabinet-grotesk.css';
+/* @import '../fonts/CabinetGrotesk/css/cabinet-grotesk.css';
 @import '../fonts/ClashDisplay/css/clash-display.css';
-@import '../fonts/ClashGrotesk_Complete/css/clash-grotesk.css';
-
+@import '../fonts/ClashGrotesk/css/clash-grotesk.css'; */
 
 * {
   --colorDark: rgb(31, 31, 31);
@@ -70,7 +69,7 @@ body::-webkit-scrollbar {
 }
 
 #loader {
-  display: flex;
+  display: none;
   position: fixed;
   
   width: 100vw;

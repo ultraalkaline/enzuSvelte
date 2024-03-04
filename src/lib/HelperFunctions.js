@@ -216,7 +216,3 @@ export function shuffleLoaderChars(text, lowerCase) {
     }
   });
 }
-
-export function shuffleCell(cell, newChar) {
-  
-}

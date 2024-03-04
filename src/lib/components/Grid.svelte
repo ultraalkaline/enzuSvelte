@@ -3,13 +3,11 @@
 <script>
   import { state } from '$lib/stores';
   import { onMount, onDestroy } from 'svelte';
-  import { fly, fade, slide, crossfade, blur } from 'svelte/transition';
+  import { slide } from 'svelte/transition';
   import jQ from 'jquery';
   import { getRandomInt, getRandomChar, addClass, removeClass, hasClass, elHasClass, shuffleRandomChars } from '$lib/HelperFunctions';
   import { Projects } from '$lib/Projects';
-  import emitter from '$lib/eventBus';
   import anime from 'animejs';
-	import { flip } from 'svelte/animate';
 
   // Constants
   const cellSize = parseFloat(
@@ -90,11 +88,6 @@
   }
 
   initializeGrid();
-
-  function updateCellValue(cell, value) {
-    if (grid.grid[cell.row].cells[cell.col])
-      grid.grid[cell.row].cells[cell.col].char = value;
-  }
 
   function onCellHover(cell) {
     const cellClass = cell.class;
@@ -255,6 +248,7 @@
     if (cellEl)
     {
       grid.grid[originalCell.row].cells[originalCell.col].char = "";
+
       // Create the anime.js timeline for the animation
       const timeline = anime.timeline({
         autoplay: false, // Set to true if you want the animation to start immediately
@@ -273,7 +267,7 @@
           complete: () => {
             // Set the text content to a random character during the animation
             const randomChar = getRandomChar();
-            grid.grid[originalCell.row].cells[originalCell.col].char = randomChar;
+            cellEl.textContent = randomChar;
           },
         });
       }
@@ -286,7 +280,7 @@
         easing: "linear",
         update: () => {
           // Set the text content to the final letter during the animation
-          grid.grid[originalCell.row].cells[originalCell.col].char = newChar;
+          cellEl.textContent = newChar;
         },
       });
 
@@ -499,8 +493,6 @@
       projThumbEl.style.top = `${top}px`;
     }
   };
-
-  
 
   onMount(() => {
     initializeGrid();

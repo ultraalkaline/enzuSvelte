@@ -11,6 +11,10 @@
 
   import jQ from 'jquery';
 
+  import '$lib/css/fonts/clash-display.css';
+  import '$lib/css/fonts/cabinet-grotesk.css';
+  import '$lib/css/fonts/clash-grotesk.css';
+
   $state = STATE.Loading;
 
   let headerNoiseRef;
@@ -19,6 +23,9 @@
   let mobileMenuRef;
 
   document.fonts.ready.then(() => {
+    console.log(document.fonts.check('1em ClashGrotesk'));
+    console.log(document.fonts.check('1em CabinetGrotesk'));
+    console.log(document.fonts.check('1em ClashDisplay'));
     jQ("#loader-text").fadeIn(500);
     shuffleLoaderChars("enzu", true).then(() => {
       setTimeout(() => {
