@@ -76,9 +76,6 @@
         clearGrid();
         displayContactInfo();
         break;
-      case "project":
-        jQ("#hamburger").hide(200);
-        break;
     }
   }
 

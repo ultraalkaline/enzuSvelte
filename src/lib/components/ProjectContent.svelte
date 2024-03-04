@@ -12,14 +12,8 @@
   let projectMedia = importProjectMedia(project);
   let videos = [];
   let gallery;
-  let observer;
-
-  const cellSize = parseFloat(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue('--gridCellSize')
-      .replace('px', '')
-      .replace(' ', '')
-  );
+  let fadeObserver;
+  let videoObserver;
 
   const onCloseClick = () => {
     projectContainerRef.classList.add('hidden');
@@ -33,7 +27,9 @@
 
   onMount(() => {
     let hiddenElements = document.querySelectorAll('.project-content .hidden');
-    observer = new IntersectionObserver((entries, o) => {
+    videos = Array.from(projectContainerRef.querySelectorAll('video'));
+
+    fadeObserver = new IntersectionObserver((entries, o) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('show');
@@ -41,13 +37,29 @@
       });
     });
 
-    hiddenElements.forEach((el) => observer.observe(el));
+    videoObserver = new IntersectionObserver((entries, o) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          try {
+            entry.target.play();
+          } catch (err) {
+            console.log("video ", entry.target.srcerr);
+          }
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.6 });
+
+    hiddenElements.forEach((el) => fadeObserver.observe(el));
+    videos.forEach((vid) => videoObserver.observe(vid));
   });
 
   onDestroy(() => {
     // Clean up the video player references
     videos = [];
-    observer.disconnect();
+    fadeObserver.disconnect();
+    videoObserver.disconnect();
   });
 </script>
 
@@ -111,11 +123,11 @@
         </a>
       {:else if filePath.default.includes('.webm')}
         <a class="spotlight hidden" href={filePath.default} data-src-webm={filePath.default} data-media="video" data-muted="true">
-          <video key={num} muted="muted" loop="loop" src={filePath.default}></video>
+          <video key={num} muted="muted" loop="loop" src={filePath.default} type="video/webm"></video>
         </a>
       {:else if filePath.default.includes('.mp4')}
         <a class="spotlight hidden" href={filePath.default} data-src-mp4={filePath.default} data-media="video" data-muted="true">
-          <video key={num} muted="muted" loop="loop" src={filePath.default}></video>
+          <video key={num} muted="muted" loop="loop" src={filePath.default} type="video/mp4"></video>
         </a>
       {/if}
     {/each}
