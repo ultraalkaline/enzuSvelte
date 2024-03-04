@@ -41,31 +41,31 @@ export function importProjectMedia(project) {
 
   switch (projectId) {
     case 'anu':
-      mediaFiles = import.meta.glob('./img/projects/anu/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/anu/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'inanna-n60':
-      mediaFiles = import.meta.glob('./img/projects/inanna-n60/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/inanna-n60/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'enzu':
-      mediaFiles = import.meta.glob('./img/projects/enzu/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/enzu/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'arc90':
-      mediaFiles = import.meta.glob('./img/projects/arc90/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/arc90/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'album-covers':
-      mediaFiles = import.meta.glob('./img/projects/album-covers/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/album-covers/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'logofolio':
-      mediaFiles = import.meta.glob('./img/projects/logofolio/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/logofolio/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'natural-habitat':
-      mediaFiles = import.meta.glob('./img/projects/natural-habitat/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/natural-habitat/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     case 'tre':
-      mediaFiles = import.meta.glob('./img/projects/tre/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/tre/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
     default:
-      mediaFiles = import.meta.glob('./img/projects/*.(mp4|webm|png|jpg|jpeg|JPG)', {query: "?url", eager: true});
+      mediaFiles = import.meta.glob('./img/projects/*.(mp4|webm|webp)', {query: "?url", eager: true});
       break;
   }
 
@@ -146,11 +146,10 @@ export function shuffleCharacters(el, text) {
   }, delay);
 }
 
-export function shuffleRandomChars(el, text, lowerCase, numIterations = 25) {
-  return new Promise((resolve) => {
+export function shuffleRandomChars(el, text, lowerCase, iterations = 2) {
 
-    const duration = 100; // Duration of each iteration in milliseconds
-    const delay = 24; // Delay between iterations in milliseconds
+    const duration = 25; // Duration of each iteration in milliseconds
+    const delay = 12; // Delay between iterations in milliseconds
 
     const chars = text.split('');
     const originalText = [...chars]; // Make a copy of the original text
@@ -160,6 +159,7 @@ export function shuffleRandomChars(el, text, lowerCase, numIterations = 25) {
     el.textContent = getRandomString();
 
     for (let i = 0; i < chars.length; i++) {
+      let numIterations = iterations;
       shuffleIntervals.push(
         setInterval(() => {
           if (numIterations > 0) {
@@ -173,13 +173,10 @@ export function shuffleRandomChars(el, text, lowerCase, numIterations = 25) {
             chars[i] = originalText[i]; // Restore the original character
             el.textContent = chars.join(''); // Update the element's content with the original character
             clearInterval(shuffleIntervals[i]); // Clear the interval for this character
-            resolve();
           }
         }, duration + i * delay) // Add a delay between intervals for different characters
       );
     }
-  });
-
 }
 
 export function shuffleLoaderChars(text, lowerCase) {

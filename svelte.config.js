@@ -6,6 +6,6 @@ export default {
     adapter: adapter(),
 	paths: {
 		base: process.env.NODE_ENV === "production" ? "/enzuSvelte" : ""
-	}
+	},
   }
 };

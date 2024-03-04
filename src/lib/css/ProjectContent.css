@@ -81,6 +81,18 @@
   display: none;
 }
 
+.project-content * {
+  transition: all .2s ease-in;
+}
+
+.project-content .hidden {
+  opacity: 0;
+}
+
+.project-content .show {
+  opacity: 1;
+}
+
 .project-header-container {
   display: flex;
   display: webkit-box;
@@ -425,5 +437,11 @@
 
   .project-info-container > .column > .row:nth-child(2), .project-overview:not(.column) {
     margin-top: calc(var(--gridCellSize) * .3);
+  }
+}
+
+@media(prefers-reduced-motion) {
+  .project-content .hidden {
+    transition: none;
   }
 }

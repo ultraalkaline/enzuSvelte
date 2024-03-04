@@ -26,7 +26,7 @@
   let activeCellHoverTimelines = [];
 
   // Refs
-  let projectTypePreviewRef, contactEmailRef, contactInstaRef;
+  let projectTypePreviewRef, projectThumbPreviewRef, contactEmailRef, contactInstaRef;
 
   function generateGrid() {
     // Get the dimensions of the grid based on window width and height
@@ -96,10 +96,10 @@
     if (!cellClass.includes("project") && !cellClass.includes("contact")) {
       removeClass(".cell.hovered", "hovered");
       removeClass(".cell.hidden", "hidden");
-      addClass("#project-type_preview", "hidden");
-      addClass("#project-thumb_preview", "hidden");
-      addClass("#contact-email", "hidden");
-      addClass("#contact-instagram", "hidden");
+      projectTypePreviewRef.classList.add('hidden');
+      projectThumbPreviewRef.classList.add('hidden');
+      contactEmailRef.classList.add('hidden');
+      contactInstaRef.classList.add('hidden');
 
       shuffleCellAnim(cell, getRandomChar());
     }
@@ -108,8 +108,8 @@
       let projectName = cellClass.replace(" project cell", "");
       if (!hasClass("." + projectName, "hovered")) {
         removeClass(".cell.hidden", "hidden");
-        addClass("#project-type_preview", "hidden");
-        addClass('#project-thumb_preview', 'hidden');
+        projectTypePreviewRef.classList.add('hidden');
+        projectThumbPreviewRef.classList.add('hidden');
         removeClass(".cell:not(." + projectName + ")", "hovered");
         addClass("." + projectName, "hovered");
         addClass(".cell:not(." + projectName + ")", "hidden");
@@ -138,29 +138,25 @@
           projectType = project.type; // Update the projectType ref with the project type
           
           if (window.innerWidth > 800) {
-            const projThumbEl = document.getElementById('project-thumb_preview');
-            if (projThumbEl) {
-              if (project.preview_mp4 && project.preview_webm) {
-                projThumbEl.setAttribute('key', 'project-thumb_' + project.id);
-                projThumbEl.firstChild.src = project.preview_mp4;
-                projThumbEl.lastChild.src = project.preview_webm;
-                projThumbEl.load();
-                removeClass('#project-thumb_preview', 'hidden');
-              } else {
-                projThumbEl.firstChild.src = null;
-                projThumbEl.lastChild.src = null;
-              }
+            if (project.preview_mp4 && project.preview_webm) {
+              projectThumbPreviewRef.setAttribute('key', 'project-thumb_' + project.id);
+              projectThumbPreviewRef.firstChild.src = project.preview_mp4;
+              projectThumbPreviewRef.lastChild.src = project.preview_webm;
+              projectThumbPreviewRef.load();
+              removeClass('#project-thumb_preview', 'hidden');
+            } else {
+              projectThumbPreviewRef.firstChild.src = null;
+              projectThumbPreviewRef.lastChild.src = null;
             }
           }
         }
 
-        let projTypeEl = document.getElementById("project-type_preview");
         const cellPos = projTypeCell.getBoundingClientRect();
 
-        projTypeEl.style.top = cellPos.top + window.scrollY - navbarHeight + "px";
-        projTypeEl.style.left = cellPos.left + window.scrollX + "px";
+        projectTypePreviewRef.style.top = cellPos.top + window.scrollY - navbarHeight + "px";
+        projectTypePreviewRef.style.left = cellPos.left + window.scrollX + "px";
         
-        shuffleRandomChars(projTypeEl, projectType, false);
+        shuffleRandomChars(projectTypePreviewRef, projectType, false);
 
         removeClass("#project-type_preview", "hidden");
       }
@@ -579,6 +575,7 @@
   <video
     id="project-thumb_preview"
     alt="project preview"
+    bind:this={projectThumbPreviewRef}
     class="hidden"
     autoplay
     playsinline
