@@ -1,9 +1,9 @@
 <script>
   import { state } from '$lib/stores';
-  import { onMount, onDestroy, getContext } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import Spotlight from 'spotlight.js';
-  import { importProjectMedia, elementIsInViewport, removeClass } from '$lib/HelperFunctions';
+  import { importProjectMedia, removeClass } from '$lib/HelperFunctions';
 
   export let project;
 
@@ -64,7 +64,6 @@
 </script>
 
 <div bind:this={projectContainerRef} id="{`${project.id}-container`}" class="project-content hidden" transition:fade={{ duration: 200 }}>
-
   <div key="{`project-title_${project.id}`}" class="project-header-container">
     <div class="project-title-container">
       <div key="{project.id}" class="project-title">
@@ -119,15 +118,15 @@
     {#each projectMedia as filePath, num (filePath)}
       {#if filePath.default.includes('.webp')}
         <a class="spotlight hidden" href="{filePath.default}">
-          <img key={num} src="{filePath.default}" alt="{filePath.default}" />
+          <img key={num} src="{filePath.default}" alt="{project.projectName}_{num}" />
         </a>
       {:else if filePath.default.includes('.webm')}
-        <a class="spotlight hidden" href={filePath.default} data-src-webm={filePath.default} data-media="video" data-muted="true">
+        <a class="spotlight hidden" href={filePath.default} data-src-webm={filePath.default} data-media="video" data-muted="true" data-title="{project.projectName}_{num}">
           <video key={num} muted="muted" loop="loop" src={filePath.default} type="video/webm"></video>
         </a>
       {:else if filePath.default.includes('.mp4')}
-        <a class="spotlight hidden" href={filePath.default} data-src-mp4={filePath.default} data-media="video" data-muted="true">
-          <video key={num} muted="muted" loop="loop" src={filePath.default} type="video/mp4"></video>
+        <a class="spotlight hidden" href={filePath.default} data-src-mp4={filePath.default} data-media="video" data-muted="true" data-title="{project.projectName}_{num}">
+          <video key={num} muted="muted" loop="loop" src={filePath.default} type="video/mp4" title="{project.id}_{num}"></video>
         </a>
       {/if}
     {/each}
