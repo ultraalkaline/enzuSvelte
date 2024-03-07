@@ -72,6 +72,7 @@
 
   margin-top: calc(var(--navbarHeight) + var(--gridCellSize) * 1);
   user-select: none;
+  -webkit-user-select: none;
   margin-bottom: var(--gridCellSize);
 
   z-index: 1;

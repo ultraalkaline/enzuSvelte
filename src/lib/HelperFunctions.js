@@ -77,18 +77,21 @@ export function importProjectMedia(project) {
     }
   });
 
-  // fileArr.sort(function(a, b) {
-  //   // Extract the numbers from file paths using regular expressions
-  //   let numA, numB;
-    
-  //   try {
-  //     numA = parseFloat(a.match(/\d+(\.\d+)?/)[0]);
-  //     numB = parseFloat(b.match(/\d+(\.\d+)?/)[0]);
-  //   } catch (error) {
-  //   } 
+  fileArr.sort(function(a, b) {
+    // Extract the numbers from file paths using regular expressions
+    let numA, numB;
 
-  //   return numA - numB;
-  // });
+    const regex = /(\d+)\.\w+$/;
+
+    try {
+      numA = parseInt(a.default.match(regex)[1]);
+      numB = parseInt(b.default.match(regex)[1]);
+    } catch (error) {
+    } 
+
+    return numA - numB;
+  });
+  
   return fileArr;
 }
 
