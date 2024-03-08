@@ -121,8 +121,11 @@
   
   padding: 0 calc(var(--gridCellSize) * .2);
   margin-bottom: -2px;
-  margin-left: var(--gridCellSize);
   transition: all .25s ease;
+}
+
+#mobile-menu button {
+  margin-left: var(--gridCellSize);
 }
 
 #nav-items button.active, #mobile-menu button.active {

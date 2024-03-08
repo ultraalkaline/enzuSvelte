@@ -182,7 +182,7 @@ export function shuffleRandomChars(el, text, lowerCase, iterations = 2) {
     }
 }
 
-export function shuffleLoaderChars(text, lowerCase) {
+export function shuffleLoaderChars(text, lowerCase, iterations = 2) {
   return new Promise((resolve) => {
     const loaderChars = document.querySelectorAll('#loader span');
     const duration = 100; // Duration of each iteration in milliseconds
@@ -200,14 +200,16 @@ export function shuffleLoaderChars(text, lowerCase) {
       loaderChars.forEach((loaderChar) => loaderChar.textContent = getRandomChar(false));
 
     for (let i = 0; i < chars.length; i++) {
+      let numberIterations = iterations;
       shuffleIntervals.push(
         setInterval(() => {
-          if (document.readyState != 'complete') {
+          if (document.readyState != 'complete' && numberIterations > 0) {
             if (lowerCase)
               chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
             else
               chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
             loaderChars[i].textContent = chars[i]; // Update the element's content with the new character
+            numberIterations--;
           } else {
             // TODO: Change this part to finally shuffle to the final character in a sequence until displaying the target text. 
             chars[i] = originalText[i]; // Restore the original character

@@ -296,6 +296,11 @@
     flex-basis: 100%;
     height: 0;
   }
+
+  .project-title span {
+    width: calc(var(--gridCellSize) * .9);
+    height: calc(var(--gridCellSize) * .9);
+  }
 }
 
 @media only screen and (max-width: 750px) {

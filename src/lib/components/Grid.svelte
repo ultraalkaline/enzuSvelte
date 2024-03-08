@@ -55,7 +55,6 @@
   }
 
   const onStateUpdated = () => {
-    console.log($state);
     switch ($state)
     {
       case "projects":
@@ -129,14 +128,13 @@
           
           if (window.innerWidth > 800) {
             if (project.preview_mp4 && project.preview_webm) {
-              projectThumbPreviewRef.setAttribute('key', 'project-thumb_' + project.id);
-              projectThumbPreviewRef.firstChild.src = project.preview_mp4;
-              projectThumbPreviewRef.lastChild.src = project.preview_webm;
-              projectThumbPreviewRef.load();
+              projectPreviewMP4Src = project.preview_mp4;
+              projectPreviewWebmSrc = project.preview_webm;
+              // projectThumbPreviewRef.load();
               removeClass('#project-thumb_preview', 'hidden');
             } else {
-              projectThumbPreviewRef.firstChild.src = null;
-              projectThumbPreviewRef.lastChild.src = null;
+              projectPreviewMP4Src = null;
+              projectPreviewWebmSrc = null;
             }
           }
         }
@@ -478,7 +476,7 @@
       projThumbEl.style.left = `${left}px`;
       projThumbEl.style.top = `${top}px`;
     }
-  };
+  }
 
   onMount(() => {
     initializeGrid();
@@ -517,6 +515,8 @@
   $: grid = generateGrid();
   $: viewportWidth = 0;
   $: viewportHeight = 0;
+  $: projectPreviewMP4Src = null;
+  $: projectPreviewWebmSrc = "/"
 </script>
 
 {#if $state === "projects" || $state === "contact"}
@@ -572,8 +572,10 @@
     loop
     muted>
     <source
+      src={projectPreviewMP4Src}
       type='video/mp4; codecs=hvc1'/>
     <source
+      src={projectPreviewWebmSrc}
       type='video/webm'/>
   </video>
   </div>

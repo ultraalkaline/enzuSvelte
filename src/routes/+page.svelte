@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { slide } from 'svelte/transition';
   import { Projects } from '$lib/Projects';
   import NoiseComponent from '$lib/components/Noise.svelte';
