@@ -55,13 +55,10 @@
   }
 
   const onStateUpdated = () => {
+    console.log($state);
     switch ($state)
     {
       case "projects":
-        if (!jQ("#mobile-menu").is(":visible"))
-          jQ("#work-content").show(200);
-        else
-          jQ("#work-content").hide(200);
         clearGrid();
         populateGridWithProjects();
         break;
@@ -69,10 +66,6 @@
         jQ("#work-content").hide(200);
         break;
       case "contact":
-        if (!jQ("#mobile-menu").is(":visible"))
-          jQ("#work-content").show(200);
-        else
-          jQ("#work-content").hide(200);
         clearGrid();
         displayContactInfo();
         break;
@@ -260,7 +253,7 @@
           complete: () => {
             // Set the text content to a random character during the animation
             const randomChar = getRandomChar();
-            cellEl.textContent = randomChar;
+            grid.grid[originalCell.row].cells[originalCell.col].char = randomChar;
           },
         });
       }
@@ -273,7 +266,7 @@
         easing: "linear",
         update: () => {
           // Set the text content to the final letter during the animation
-          cellEl.textContent = newChar;
+          grid.grid[originalCell.row].cells[originalCell.col].char = newChar;
         },
       });
 
@@ -517,7 +510,7 @@
   });
 
   // Executes whenever the value of `state` changes
-  state.subscribe((value) => {
+  state.subscribe(() => {
     onStateUpdated();
   });
 

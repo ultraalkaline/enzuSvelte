@@ -6,7 +6,7 @@ export const STATE = {
   Projects:   "projects",   // If the projects grid is shown
   Project:    "project",    // If a project is shown
   Loading:    "loading",    // If the page is loading
-  None:       "none"        // No button is selected, usually a project is shown
+  MobileMenu: "mobileMenu", // If the hamburger menu is shown (mobile)
 };
 
 export const state = writable(STATE.Loading);

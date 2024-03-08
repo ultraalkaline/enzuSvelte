@@ -184,7 +184,7 @@ export function shuffleRandomChars(el, text, lowerCase, iterations = 2) {
 
 export function shuffleLoaderChars(text, lowerCase) {
   return new Promise((resolve) => {
-    const loader = document.getElementById('loader-text');
+    const loaderChars = document.querySelectorAll('#loader span');
     const duration = 100; // Duration of each iteration in milliseconds
     const delay = 24; // Delay between iterations in milliseconds
 
@@ -192,8 +192,12 @@ export function shuffleLoaderChars(text, lowerCase) {
     const originalText = [...chars]; // Make a copy of the original text
 
     const shuffleIntervals = [];
+    let completedIntervals = 0; // Keep track of the number of completed shuffleIntervals.
 
-    loader.textContent = getRandomString();
+    if (lowerCase)
+      loaderChars.forEach((loaderChar) => loaderChar.textContent = getRandomChar(true));
+    else 
+      loaderChars.forEach((loaderChar) => loaderChar.textContent = getRandomChar(false));
 
     for (let i = 0; i < chars.length; i++) {
       shuffleIntervals.push(
@@ -203,14 +207,32 @@ export function shuffleLoaderChars(text, lowerCase) {
               chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
             else
               chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
-              loader.textContent = chars.join(''); // Update the element's content with the new character
+            loaderChars[i].textContent = chars[i]; // Update the element's content with the new character
           } else {
             // TODO: Change this part to finally shuffle to the final character in a sequence until displaying the target text. 
             chars[i] = originalText[i]; // Restore the original character
-            loader.textContent = chars.join(''); // Update the element's content with the original character
+            loaderChars[i].textContent = chars[i]; // Update the element's content with the original character
             clearInterval(shuffleIntervals[i]); // Clear the interval for this character
-            resolve();
+            completedIntervals++;
+
+            if (completedIntervals === loaderChars.length) {
+              setTimeout(()=> resolve(), 400);
+            }
           }
+
+          // if (document.readyState != 'complete') {
+          //   if (lowerCase)
+          //     chars[i] = getRandomChar(true); // Shuffle the character (lowercase)
+          //   else
+          //     chars[i] = getRandomChar(false); // Shuffle the character (uppercase)
+          //     loader.textContent = chars.join(''); // Update the element's content with the new character
+          // } else {
+          //   // TODO: Change this part to finally shuffle to the final character in a sequence until displaying the target text. 
+          //   chars[i] = originalText[i]; // Restore the original character
+          //   loader.textContent = chars.join(''); // Update the element's content with the original character
+          //   clearInterval(shuffleIntervals[i]); // Clear the interval for this character
+          //   resolve();
+          // }
         }, duration + i * delay) // Add a delay between intervals for different characters
       );
     }

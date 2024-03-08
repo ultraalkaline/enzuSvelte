@@ -3,77 +3,25 @@
   --projectItemMargin: calc(var(--projectItemWidth) / 2);
   --btnCloseLeft: calc(var(--gridCellSize) * 2);
 
-  --thresholdLineWidth: 2px;
-  --thresholdIndicatorSize: 24px;
-  --thresholdIndicatorBorderWidth: 2px;
-
-  --thresholdLineRight: calc(var(--gridCellSize) * 2.5 - var(--thresholdLineWidth) / 2);
-  --thresholdIndicatorRight: calc(var(--gridCellSize) * 2.5 - var(--thresholdIndicatorSize) / 2 - var(--thresholdIndicatorBorderWidth) / 2);
-  --thresholdLineTop: calc(var(--navbarHeight) + var(--gridCellSize) * 3);
-  --thresholdIndicatorTop: calc(50% - (var(--navbarHeight) - var(--gridCellSize) * 3));
-}
-
-.threshold {
-  transition: background 100ms ease;
-}
-
-.threshold-indicator {
-  position: fixed;
-  display: inline-block;
-
-  width: var(--thresholdIndicatorSize);
-  height: var(--thresholdIndicatorSize);
-  right: calc(var(--thresholdIndicatorRight) - var(--thresholdIndicatorBorderWidth) / 2);
-  top: var(--thresholdIndicatorTop);
-
-  border: var(--thresholdIndicatorBorderWidth) solid var(--colorIntersecting);
-  background: none;
-  border-radius: 100%;
-}
-
-.threshold-line {
-  position: absolute;
-  display: inline-block;
-  flex: 1;  
-
-  width: var(--thresholdLineWidth);
-  height: 100%;
-  right: var(--thresholdLineRight);
-  top: var(--thresholdLineTop);
-  border-radius: .5em;
-
-  background: var(--colorThresholdLine);
-}
-
-.threshold-indicator.intersecting {
-  background: var(--colorIntersecting);
-}
-
-.threshold-play {
-  position: absolute;
-  display: inline-block;
-
-  width: 18px;
-  height: 18px;
-  right: var(--thresholdIndicatorRight);
-
-  border: 2px solid var(--colorThresholdLine);
-  border-radius: 100%;
-
-  background: none;
+  --projTitleFontSize: calc(var(--gridCellSize) * .7);
+  --projTypeFontSize: 1.2rem;
+  --projectGap: calc(var(--gridCellSize) * 4);
+  --projectInfoGap: var(--projectGap);
+  --projectImgBorder: 2px solid var(--colorProjectImgBorder);
 }
 
 .project-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--projectGap);
 
   min-height: min-content;
-
   margin-top: calc(var(--navbarHeight) + var(--gridCellSize) * 1);
+  margin-bottom: var(--gridCellSize);
+
   user-select: none;
   -webkit-user-select: none;
-  margin-bottom: var(--gridCellSize);
 
   z-index: 1;
 }
@@ -84,6 +32,7 @@
 
 .project-content * {
   transition: all .2s ease;
+  -webkit-transition: all .2s ease;
 }
 
 .project-content .hidden {
@@ -109,7 +58,7 @@
 .project-title-container {
   display: inline-flex;
   flex-direction: row;
-  justify-self: flex-start;
+  align-self: flex-start;
   gap: calc(var(--gridCellSize));
 }
 
@@ -189,10 +138,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-basis: 100%;;
   justify-content: center;
 
-  width: calc(100% - var(--projectItemWidth));
-
+  padding: 0;
+  margin-left: calc(var(--projectItemWidth) / 2);
+  margin-right: calc(var(--projectItemWidth) / 2);
   object-fit: contain;
   
   margin-top: var(--gridCellSize);
@@ -202,7 +153,6 @@
 .project-anim {
   width: 100%;
   height: 100%;
-
   object-fit: contain;
 }
 
@@ -210,10 +160,9 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-
   gap: var(--projectInfoGap);
+
   width: calc(100% - var(--projectItemWidth));
-  margin-top: calc(var(--gridCellSize) * 2);
 }
 
 .project-info-container > .column {
@@ -258,8 +207,6 @@
   width: calc(100% - var(--projectItemWidth));
   height: fit-content;
   
-  margin-top: calc(var(--gridCellSize) * 2);
-
   font-size: 0;
 }
 
@@ -272,12 +219,12 @@
   width: 100%;
   height: fit-content;
   object-fit: contain;
-  margin-bottom: -5px;
+  margin-bottom: -2px;
 }
 
 @media only screen and (max-width: 1750px) {
-  .project-info-container {
-    --projectInfoGap: calc(var(--gridCellSize) * 2);
+  * {
+    --projectGap: calc(var(--gridCellSize) * 2);
   }
 
   .project-info-container .column:first-of-type {
@@ -294,8 +241,8 @@
 }
 
 @media only screen and (max-width: 1582px) {
-  .project-info-container {
-    --projectInfoGap: calc(var(--gridCellSize) * 4);
+  * {
+    --projectGap: calc(var(--gridCellSize) * 2);
   }
 }
 
@@ -303,25 +250,14 @@
   * {
     --projectItemWidth: calc(var(--gridCellSize) * 6);
     --btnCloseLeft: calc(var(--gridCellSize) * 1);
-
-    --thresholdIndicatorSize: 18px;
-
-    --thresholdLineRight: calc(var(--gridCellSize) * 1.5 - var(--thresholdLineWidth) / 2);
-    --thresholdIndicatorRight: calc(var(--gridCellSize) * 1.5 - var(--thresholdIndicatorSize) / 2);
-    --thresholdLineTop: calc(var(--navbarHeight) + var(--gridCellSize) * 3);
-    --thresholdIndicatorTop: calc(var(--navbarHeight) + var(--gridCellSize) * 8);
   }
 }
 
 @media only screen and (max-width: 1133px) {
   * {
-    --thresholdLineTop: calc(var(--navbarHeight) + var(--gridCellSize) * 3.5);
+    --projectGap: calc(var(--gridCellSize) * 2);
   }
-
-  .project-info-container {
-    --projectInfoGap: calc(var(--gridCellSize) * 2);
-  }
-
+  
   .project-info-container > .column {
     font-size: calc(var(--gridCellSize) * .6);
   }
@@ -363,16 +299,15 @@
 }
 
 @media only screen and (max-width: 750px) {
-
-  .threshold-indicator, .threshold-line {
-    display: none;
+  * {
+    --projectGap: calc(var(--gridCellSize) * 1);
   }
 
   .project-header-container {
     justify-content: flex-start;
   }
 
-  .project-header-container > div {
+  .project-header-container > div:not(.project-anim-container) {
     flex-basis: 100%;
     padding: 0 var(--gridCellSize);
   }
@@ -390,11 +325,11 @@
   }
 
   .project-anim-container {
-    width: calc(100% - (var(--gridCellSize) * 2));
+    margin-left: var(--gridCellSize);
+    margin-right: var(--gridCellSize);
   }
 
   .project-info-container {
-    --projectInfoGap: calc(var(--gridCellSize) * 1);
     width: calc(100% - (var(--gridCellSize) * 2));
   }
 

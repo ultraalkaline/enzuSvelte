@@ -35,7 +35,7 @@
           entry.target.classList.add('show');
         }
       });
-    });
+    }, { rootMargin: '0px 0px -5% 0px' });
 
     videoObserver = new IntersectionObserver((entries, o) => {
       entries.forEach((entry) => {
@@ -64,7 +64,7 @@
 </script>
 
 <div bind:this={projectContainerRef} id="{`${project.id}-container`}" class="project-content hidden" transition:fade={{ duration: 200 }}>
-  <div key="{`project-title_${project.id}`}" class="project-header-container">
+  <div class="project-header-container">
     <div class="project-title-container">
       <div key="{project.id}" class="project-title">
         {#each project.projectName.split('') as char}
@@ -77,14 +77,16 @@
       </div>
     </div>
     <div key="{`project-type_${project.id}`}" class="project-type hidden">{project.type}</div>
+ 
+    <div class="project-anim-container">
+      <video key="{`project-anim_${project.id}`}" id="{`${project.id}-anim`}" class="project-anim hidden" alt="{`${project.id} animation`}" autoplay loop muted>
+        <source src="{`${project.preview_mp4}`}" type='video/mp4; codecs=hvc1'>
+        <source src="{`${project.preview_webm}`}" type='video/webm'>
+      </video>
+    </div>
   </div>
 
-  <div class="project-anim-container">
-    <video key="{`project-anim_${project.id}`}" id="{`${project.id}-anim`}" class="project-anim hidden" alt="{`${project.id} animation`}" autoplay loop muted>
-      <source src="{`${project.preview_mp4}`}" type='video/mp4; codecs=hvc1'>
-      <source src="{`${project.preview_webm}`}" type='video/webm'>
-    </video>
-  </div>
+  
 
   <div class="project-info-container">
     <div class="project-overview column">
