@@ -24,6 +24,7 @@
   let contactEmail = "BARSIN.NISSAN@GMAIL.COM";
   let contactInsta = "ENZU.DESIGN";
   let activeCellHoverTimelines = [];
+  let mouseOverProject = false;
 
   // Refs
   let projectTypePreviewRef, projectThumbPreviewRef, contactEmailRef, contactInstaRef;
@@ -89,6 +90,7 @@
       projectThumbPreviewRef.classList.add('hidden');
       contactEmailRef.classList.add('hidden');
       contactInstaRef.classList.add('hidden');
+      mouseOverProject = false;
 
       shuffleCellAnim(cell, getRandomChar());
     }
@@ -99,6 +101,7 @@
         removeClass(".cell.hidden", "hidden");
         projectTypePreviewRef.classList.add('hidden');
         projectThumbPreviewRef.classList.add('hidden');
+        mouseOverProject = true;
         removeClass(".cell:not(." + projectName + ")", "hovered");
         addClass("." + projectName, "hovered");
         addClass(".cell:not(." + projectName + ")", "hidden");
@@ -130,8 +133,7 @@
             if (project.preview_mp4 && project.preview_webm) {
               projectPreviewMP4Src = project.preview_mp4;
               projectPreviewWebmSrc = project.preview_webm;
-              // projectThumbPreviewRef.load();
-              removeClass('#project-thumb_preview', 'hidden');
+              projectThumbPreviewRef.load();
             } else {
               projectPreviewMP4Src = null;
               projectPreviewWebmSrc = null;
@@ -435,7 +437,7 @@
     // TODO: Transform this function to return `top` and `left` for `projThumbEl` and use it in the style directly.
     // See https://svelte.dev/docs/element-directives#style-property for reference
     let projThumbEl = document.getElementById("project-thumb_preview");
-    if (projThumbEl && !elHasClass(projThumbEl, 'hidden')) 
+    if (projThumbEl && mouseOverProject)
     {
       const cursorX = event.clientX;
       const cursorY = event.clientY;
@@ -476,6 +478,10 @@
       projThumbEl.style.left = `${left}px`;
       projThumbEl.style.top = `${top}px`;
     }
+  }
+
+  function projectThumbVidLoaded() {
+    removeClass('#project-thumb_preview', 'hidden');
   }
 
   onMount(() => {
@@ -566,6 +572,7 @@
     id="project-thumb_preview"
     alt="project preview"
     bind:this={projectThumbPreviewRef}
+    on:loadeddata={projectThumbVidLoaded}
     class="hidden"
     autoplay
     playsinline
