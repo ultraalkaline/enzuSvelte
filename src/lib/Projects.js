@@ -31,7 +31,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/enzu/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/enzu/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/enzu/anim.webm`, import.meta.url).href
   },
   {
