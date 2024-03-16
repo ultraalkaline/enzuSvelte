@@ -9,7 +9,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/anu/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/anu/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/anu/anim.webm`, import.meta.url).href
   },
   {
@@ -20,7 +20,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/album-covers/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/album-covers/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/album-covers/anim.webm`, import.meta.url).href
   },
   {
@@ -42,7 +42,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/arc90/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/arc90/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/arc90/anim.webm`, import.meta.url).href
   },
   {
@@ -53,7 +53,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/album-covers/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/album-covers/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/album-covers/anim.webm`, import.meta.url).href
   },
   {
@@ -64,7 +64,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-   preview_mp4: new URL(`./img/projects/logofolio/anim.mp4`, import.meta.url).href,
+   preview_mp4: new URL(`./img/projects/logofolio/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/logofolio/anim.webm`, import.meta.url).href
   },
   {
@@ -75,7 +75,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/natural-habitat/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/natural-habitat/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/natural-habitat/anim.webm`, import.meta.url).href
   },
   {
@@ -86,7 +86,7 @@ export const Projects = [
     tools: ["BLENDER", "FUSION360", "PHOTOSHOP", "PREMIERE PRO", "AFTER EFFECTS"],
     creativeFields: ["PRODUCT DESIGN", "INDUSTRIAL DESIGN", "3D ART"],
     tags: ["DESIGN", "ELECTRONICS", "KEYBOARD", "RENDERING"],
-    preview_mp4: new URL(`./img/projects/tre/anim.mp4`, import.meta.url).href,
+    preview_mp4: new URL(`./img/projects/tre/anim.mov`, import.meta.url).href,
     preview_webm: new URL(`./img/projects/tre/anim.webm`, import.meta.url).href
   }
 ];
