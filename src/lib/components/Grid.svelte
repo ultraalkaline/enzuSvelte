@@ -1,5 +1,3 @@
-
-
 <script>
   import { state } from '$lib/stores';
   import { onMount, onDestroy } from 'svelte';
@@ -24,6 +22,7 @@
   let contactEmail = "BARSIN.NISSAN@GMAIL.COM";
   let contactInsta = "ENZU.DESIGN";
   let activeCellHoverTimelines = [];
+  let projectHovered = false;
 
   // Refs
   let projectTypePreviewRef, projectThumbPreviewRef, contactEmailRef, contactInstaRef;
@@ -87,6 +86,7 @@
       removeClass(".cell.hidden", "hidden");
       projectTypePreviewRef.classList.add('hidden');
       projectThumbPreviewRef.classList.add('hidden');
+      projectHovered = false;
       contactEmailRef.classList.add('hidden');
       contactInstaRef.classList.add('hidden');
 
@@ -99,6 +99,7 @@
         removeClass(".cell.hidden", "hidden");
         projectTypePreviewRef.classList.add('hidden');
         projectThumbPreviewRef.classList.add('hidden');
+        projectHovered = true;
         removeClass(".cell:not(." + projectName + ")", "hovered");
         addClass("." + projectName, "hovered");
         addClass(".cell:not(." + projectName + ")", "hidden");
@@ -130,8 +131,7 @@
             if (project.preview_mp4 && project.preview_webm) {
               projectPreviewMP4Src = project.preview_mp4;
               projectPreviewWebmSrc = project.preview_webm;
-              // projectThumbPreviewRef.load();
-              removeClass('#project-thumb_preview', 'hidden');
+              projectThumbPreviewRef.load();
             } else {
               projectPreviewMP4Src = null;
               projectPreviewWebmSrc = null;
@@ -210,7 +210,7 @@
     }
   }
 
-  const onGridUnHover = () => {
+  function onGridUnHover() {
     addClass("#project-type_preview", "hidden");
     addClass("#project-thumb_preview", "hidden");
     addClass("#contact-email", "hidden");
@@ -435,7 +435,7 @@
     // TODO: Transform this function to return `top` and `left` for `projThumbEl` and use it in the style directly.
     // See https://svelte.dev/docs/element-directives#style-property for reference
     let projThumbEl = document.getElementById("project-thumb_preview");
-    if (projThumbEl && !elHasClass(projThumbEl, 'hidden')) 
+    if (projThumbEl && projectHovered) 
     {
       const cursorX = event.clientX;
       const cursorY = event.clientY;
@@ -476,6 +476,10 @@
       projThumbEl.style.left = `${left}px`;
       projThumbEl.style.top = `${top}px`;
     }
+  }
+
+  function projectThumbLoaded() {
+    removeClass('#project-thumb_preview', 'hidden');
   }
 
   onMount(() => {
@@ -566,6 +570,7 @@
     id="project-thumb_preview"
     alt="project preview"
     bind:this={projectThumbPreviewRef}
+    on:loadeddata={projectThumbLoaded}
     class="hidden"
     autoplay
     playsinline
